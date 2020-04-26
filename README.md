@@ -1,6 +1,11 @@
 # ejuri
 Sistema de julgamento de processos judiciais
 
+## Tecnologias
+- Php7 (Pdo)
+- Mysql8
+- Uikit3
+
 ### Admin
 - Advogado
     - listarAdvogados (ativos/inativos)
