@@ -2,16 +2,18 @@
     require_once 'conect.php';
 
     if((!empty($_POST['oab'])) and (!empty($_POST['senhaAdv']))) {
-        $oab = $_POST['oab'];
-        $senha = strtolower($_POST['senhaAdv']);
-
-        //Admin
-        if(($oab==1) and ($senha==1)) {
+        if(($_POST['oab']==1) and ($_POST['senhaAdv']==1)) {
             session_start();
             $_SESSION['nome'] = "admin";
             $_SESSION['senha'] = "admin";
             $_SESSION['msgm'] = null;
             header("location: admIndex.php");
+        } elseif(!empty($_POST['oab']) and $_POST['senhaAdv']) {
+            session_start();
+            $_SESSION['nome'] = $_POST['oab'];
+            $_SESSION['senha'] = $_POST['senhaAdv'];
+            $_SESSION['msgm'] = null;
+            header("location: advIndex.php");
         }
     }
 ?>
@@ -50,7 +52,7 @@
                                 <input class="uk-input uk-form-width-medium" type="number" min=1 required name="oab" placeholder="Oab">
                             </div>
                             <div class="uk-margin">
-                                <input class="uk-input uk-form-width-medium" type="password" maxlength="5" required name="senhaAdv" placeholder="Senha">
+                                <input class="uk-input uk-form-width-medium" type="password" maxlength="5" required name="senhaAdv" placeholder="Senha" style="text-transform: lowercase;">
                             </div>
                             <div class="uk-margin">
                                 <button class="uk-button uk-button-default" type="submit">Entrar</button>

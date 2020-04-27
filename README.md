@@ -8,13 +8,13 @@ Sistema de julgamento de processos judiciais
 
 ### Admin
 - Advogado
-    - listarAdvogados (ativos/inativos)
-    - addAdvogado
-    - ativar/inativarAdvogado
+    - listarAdvogados (ativos/inativos) ✔
+    - addAdvogado ✔
+    - ativar/inativarAdvogado ✔
 - Juíz
-    - listarJuizes (ativos/inativos)
-    - addJuiz
-    - ativar/inativarJuiz
+    - listarJuizes (ativos/inativos) ✔
+    - addJuiz ✔
+    - ativar/inativarJuiz ✔
 
 ### Advogado
 - edAdvogado
