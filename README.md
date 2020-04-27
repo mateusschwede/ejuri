@@ -7,11 +7,11 @@ Sistema de julgamento de processos judiciais
 - Uikit3
 
 ### Admin
-- Advogado
+- Advogado ✔
     - listarAdvogados (ativos/inativos) ✔
     - addAdvogado ✔
     - ativar/inativarAdvogado ✔
-- Juíz
+- Juíz ✔
     - listarJuizes (ativos/inativos) ✔
     - addJuiz ✔
     - ativar/inativarJuiz ✔
@@ -25,7 +25,8 @@ Sistema de julgamento de processos judiciais
     - ativar/inativarCliente ✔
 - Processo
     - listarProcessos (andamento,deferidos,indeferidos,cancelados) ✔
-    - addProcesso
+    - addProcesso ✔
+    - verProcesso
     - edProcesso
     - cancelarProcesso
     - imprimirProcesso
