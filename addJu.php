@@ -2,6 +2,19 @@
     require_once 'conect.php';
     session_start();
     if ((empty($_SESSION['nome'])) or (empty($_SESSION['senha']))) {header("location: index.php");}
+
+    $msgm = null;
+    if((!empty($_POST['cod'])) and (!empty($_POST['nome'])) and (!empty($_POST['comarca'])) and (!empty($_POST['senha']))) {
+        $r = $db->prepare("SELECT cod FROM juiz WHERE cod=?");
+        $r->execute(array($_POST['cod']));
+        if($r->rowCount()>0) {$msgm = "<script>UIkit.notification({message: '<span uk-icon=\'icon: close\'></span> Juíz Cod ".$_POST['cod']." já existente', status: 'danger'})</script>";}
+        else {
+            $r = $db->prepare("INSERT INTO juiz(cod,nome,comarca,senha) VALUES (?,?,?,?)");
+            $r->execute(array($_POST['cod'],$_POST['nome'],$_POST['comarca'],$_POST['senha']));
+            $_SESSION['msgm'] = "<script>UIkit.notification({message: '<span uk-icon=\'icon: check\'></span> Juíz ".$_POST['nome']." adicionado', status: 'success'})</script>";
+            header("location: admIndex.php");
+        }
+    }
 ?>
 
 <!doctype html>
@@ -43,67 +56,29 @@
 
     <div class="uk-child-width-expand@s" uk-grid>
         <div>
-            <h1>Advogados</h1>
-            <button class="uk-button uk-button-primary" onclick="window.location.href='addAdv.php'">Adicionar</button>
-            <dl class="uk-description-list uk-description-list-divider">
-                <?php
-                    $r = $db->query("SELECT * FROM advogado WHERE ativo=1 ORDER BY nome");
-                    $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
-                    foreach($linhas as $l) {
-                        echo "
-                            <dt>".$l['nome']." (Oab ".$l['oab'].")</dt>
-                            <dd>Senha: ".$l['senha']." <a class='uk-button uk-button-link uk-button-small' id='btnRed' href='inativar.php?oab=".base64_encode($l['oab'])."'>Inativar</a></dd>                        
-                        ";
-                    }
-                ?>
-            </dl>
-            <h3 class="uk-heading-line"><span>Inativos</span></h3>
-            <dl class="uk-description-list uk-description-list-divider">
-                <?php
-                    $r = $db->query("SELECT * FROM advogado WHERE ativo=0 ORDER BY nome");
-                    $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
-                    foreach($linhas as $l) {
-                        echo "
-                            <dt>".$l['nome']." (Oab ".$l['oab'].")</dt>
-                            <dd>Senha: ".$l['senha']." <a class='uk-button uk-button-link uk-button-small' href='ativar.php?oab=".base64_encode($l['oab'])."'>Ativar</a></dd>                        
-                        ";
-                    }
-                ?>
-            </dl>
-        </div>
-
-        <div>
-            <h1>Juízes</h1>
-            <button class="uk-button uk-button-primary" onclick="window.location.href='addJu.php'">Adicionar</button>
-            <dl class="uk-description-list uk-description-list-divider">
-                <?php
-                    $r = $db->query("SELECT * FROM juiz WHERE ativo=1 ORDER BY nome");
-                    $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
-                    foreach($linhas as $l) {
-                        echo "
-                            <dt>".$l['nome']." (Cod ".$l['cod'].")</dt>
-                            <dd>Comarca: ".$l['comarca']." Senha: ".$l['senha']." <a class='uk-button uk-button-link uk-button-small' id='btnRed' href='inativar.php?cod=".base64_encode($l['cod'])."'>Inativar</a></dd>                        
-                        ";
-                    }
-                ?>
-            </dl>
-            <h3 class="uk-heading-line"><span>Inativos</span></h3>
-            <dl class="uk-description-list uk-description-list-divider">
-                <?php
-                    $r = $db->query("SELECT * FROM juiz WHERE ativo=0 ORDER BY nome");
-                    $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
-                    foreach($linhas as $l) {
-                        echo "
-                            <dt>".$l['nome']." (Cod ".$l['cod'].")</dt>
-                            <dd>Comarca: ".$l['comarca']." Senha: ".$l['senha']." <a class='uk-button uk-button-link uk-button-small' href='ativar.php?cod=".base64_encode($l['cod'])."'>Ativar</a></dd>                        
-                        ";
-                    }
-                ?>
-            </dl>
+            <h2>Novo advogado</h2>
+            <form action="addJu.php" method="post">
+                <fieldset class="uk-fieldset">
+                    <div class="uk-margin">
+                        <input class="uk-input uk-form-width-small" type="number" required name="cod" min=0 max=9999999999 placeholder="Cod">
+                    </div>
+                    <div class="uk-margin">
+                        <input class="uk-input uk-form-width-medium" type="text" required name="nome" maxlength="70" placeholder="Nome" style="text-transform: lowercase;">
+                    </div>
+                    <div class="uk-margin">
+                        <input class="uk-input uk-form-width-large" type="text" required name="comarca" maxlength="100" placeholder="Comarca" style="text-transform: lowercase;">
+                    </div>
+                    <div class="uk-margin">
+                        <input class="uk-input uk-form-width-small" type="text" required name="senha" maxlength="5" placeholder="Senha" style="text-transform: lowercase;">
+                    </div>
+                    <button class="uk-button uk-button-danger" type="button" onclick="window.location.href='admIndex.php'">Voltar</button>
+                    <button class="uk-button uk-button-default" type="submit">Adicionar</button>
+                </fieldset>
+            </form>
         </div>
     </div>
 
 
-<?php if($_SESSION['msgm']!=null) {echo $_SESSION['msgm']; $_SESSION['msgm']=null;} ?>
+<?php if($msgm!=null) {echo $msgm; $msgm=null;} ?>
 </body>
 </html>
