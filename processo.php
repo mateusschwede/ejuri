@@ -2,6 +2,15 @@
     require_once 'conect.php';
     session_start();
     if ((empty($_SESSION['nome'])) or (empty($_SESSION['senha']))) {header("location: index.php");}
+    if(!empty($_GET['id'])) {$_SESSION['id'] = base64_decode($_GET['id']);}
+
+    if(!empty($_POST['justificativa'])) {
+        $r = $db->prepare("UPDATE processo SET situacao='cancelado',justificativa=? WHERE id=?");
+        $r->execute(array($_POST['justificativa'],$_SESSION['id']));
+        $_SESSION['msgm'] = "<script>UIkit.notification({message: '<span uk-icon=\'icon: check\'></span> Processo ".$_SESSION['id']." cancelado', status: 'success'})</script>";
+        unset($_SESSION['id']);
+        header("location: advIndex.php");
+    }
 ?>
 
 <!doctype html>
@@ -51,6 +60,8 @@
                         <p>".$l['dataInicio']."</p>
                         <p class='uk-text-large'>Encerramento</p>
                         <p>".$l['dataEncerramento']."</p>
+                        <p class='uk-text-large'>Justificativa</p>
+                        <p>".$l['justificativa']."</p>
                         <p class='uk-text-large'>Cliente</p>
                     ";
                     $r2 = $db->prepare("SELECT nome FROM cliente WHERE cpf=?");
@@ -79,12 +90,28 @@
                     ";
                 }
             ?>
-
             <button class="uk-button uk-button-default" onclick="window.location.href='advIndex.php'" id="btnRed">Voltar</button>
-            <a class="uk-button uk-button-danger" href='cancelarProcesso.php?idCancelar=".<?=base64_encode(base64_decode($_GET['id']))?>."'">Cancelar processo</a>
+            <button class="uk-button uk-button-danger uk-margin-small-right" type="button" uk-toggle="target: #modal-close-default">Cancelar processo</button>
         </div>
     </div>
 
 
 </body>
 </html>
+
+
+<div id="modal-close-default" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body">
+        <button class="uk-modal-close-default" type="button" uk-close></button>
+        <h2 class="uk-modal-title">Cancelar processo</h2>
+        <form action="processo.php" method="post">
+            <fieldset class="uk-fieldset">
+                <div class="uk-margin">
+                    <textarea class="uk-textarea uk-form-width-large" rows="3" required name="justificativa" placeholder="Justificativa" style="text-transform: lowercase; resize: none;"></textarea>
+                </div>
+            </fieldset>
+            <button class="uk-button uk-button-default uk-modal-close" type="button" id="btnRed">Voltar</button>
+            <button class="uk-button uk-button-default" type="submit">Confirmar</button>
+        </form>
+    </div>
+</div>
