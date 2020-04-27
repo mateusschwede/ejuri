@@ -26,10 +26,10 @@ Sistema de julgamento de processos judiciais
 - Processo
     - listarProcessos (andamento,deferidos,indeferidos,cancelados) ✔
     - addProcesso ✔
-    - verProcesso
+    - verProcesso ✔
     - edProcesso
-    - cancelarProcesso
-    - imprimirProcesso
+    - cancelarProcesso ✔
+    - imprimirProcesso ✔
 
 ### Juíz
 - edJuiz

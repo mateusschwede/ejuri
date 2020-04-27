@@ -82,6 +82,7 @@
                 }
             ?>
             <button class="uk-button uk-button-default" onclick="window.location.href='advIndex.php'" id="btnRed">Voltar</button>
+            <button class="uk-button uk-button-primary" onclick="window.print()">Imprimir</button>
         </div>
     </div>
 

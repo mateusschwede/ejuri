@@ -91,6 +91,7 @@
                 }
             ?>
             <button class="uk-button uk-button-default" onclick="window.location.href='advIndex.php'" id="btnRed">Voltar</button>
+            <button class="uk-button uk-button-primary" onclick="window.print()">Imprimir</button>
             <button class="uk-button uk-button-danger uk-margin-small-right" type="button" uk-toggle="target: #modal-close-default">Cancelar processo</button>
         </div>
     </div>
