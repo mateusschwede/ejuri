@@ -3,35 +3,16 @@
     session_start();
     if ((empty($_SESSION['nome'])) or (empty($_SESSION['senha']))) {header("location: index.php");}
 
-    $msgm = null;
-    if((!empty($_POST['cpf'])) and (!empty($_POST['nome'])) and (!empty($_POST['nascimento'])) and (!empty($_POST['sexo'])) and (!empty($_POST['estadoCivil'])) and (!empty($_POST['endereco']))) {
-        $r = $db->prepare("SELECT cpf FROM cliente WHERE cpf=?");
-        $r->execute(array($_POST['cpf']));
-        if($r->rowCount()>0) {$msgm = "<script>UIkit.notification({message: '<span uk-icon=\'icon: close\'></span> Cliente Cpf ".$_POST['cpf']." já existente', status: 'danger'})</script>";}
-        else {
-            $r = $db->prepare("INSERT INTO cliente(cpf,nome,nascimento,sexo,estadoCivil,endereco) VALUES (?,?,?,?,?,?)");
-            $r->execute(array($_POST['cpf'],$_POST['nome'],$_POST['nascimento'],$_POST['sexo'],$_POST['estadoCivil'],$_POST['endereco']));
-            $_SESSION['msgm'] = "<script>UIkit.notification({message: '<span uk-icon=\'icon: check\'></span> Cliente ".$_POST['cpf']." adicionado', status: 'success'})</script>";
-            header("location: advIndex.php");
-        }
+    if((!empty($_POST['assunto'])) and (!empty($_POST['descricao'])) and (!empty($_POST['tipoAcao'])) and (!empty($_POST['valorHora'])) and (!empty($_POST['cpfCliente'])) and (!empty($_POST['codJuiz']))) {
+        $r = $db->prepare("INSERT INTO processo(assunto,descricao,tipoAcao,valorHora,cpfCliente,oabAdvogado,codJuiz) VALUES (?,?,?,?,?,?,?)");
+        $r->execute(array($_POST['assunto'],$_POST['descricao'],$_POST['tipoAcao'],$_POST['valorHora'],$_POST['cpfCliente'],$_SESSION['nome'],$_POST['codJuiz']));
+        $_SESSION['msgm'] = "<script>UIkit.notification({message: '<span uk-icon=\'icon: check\'></span> Processo ".$_POST['id']." adicionado', status: 'success'})</script>";
+        header("location: advIndex.php");
     }
 ?>
 
 <!doctype html>
 <html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="css/uikit.min.css" />
-    <script src="js/uikit.min.js"></script>
-    <script src="js/uikit-icons.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.4.2/dist/css/uikit.min.css" />
-    <script src="https://cdn.jsdelivr.net/npm/uikit@3.4.2/dist/js/uikit.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/uikit@3.4.2/dist/js/uikit-icons.min.js"></script>
-    <link rel="stylesheet" href="estilo.css">
-    <link rel="shortcut icon" href="https://img.icons8.com/cotton/64/000000/courthouse.png"/>
-    <title>EJuri</title>
-</head>
 <body>
 
 
@@ -60,7 +41,7 @@
             <form action="addProcesso.php" method="post">
                 <fieldset class="uk-fieldset">
                     <div class="uk-margin">
-                        <input class="uk-input uk-form-width-medium" type="text" required name="assunto" maxlength="100" placeholder="Assunto" style="text-transform: lowercase;">
+                        <input class="uk-input uk-form-width-large" type="text" required name="assunto" maxlength="100" placeholder="Assunto" style="text-transform: lowercase;">
                     </div>
                     <div class="uk-margin">
                         <textarea class="uk-textarea uk-form-width-large" rows="5" required name="descricao" placeholder="Descrição" style="text-transform: lowercase; resize: none;"></textarea>
@@ -76,7 +57,7 @@
                         </select>
                     </div>
                     <div class="uk-margin">
-                        <input class="uk-input uk-form-width-large" type="number" required name="valorHora" lang="en" min=0 step="0.01" placeholder="Valor hora">
+                        <input class="uk-input uk-form-width-large" type="number" required name="valorHora" lang="en" min=0 max=9999 step="0.01" placeholder="Valor hora">
                     </div>
                     <div class="uk-margin">
                         <label class="uk-form-label" for="selectCliente">Cliente</label><br>
@@ -106,6 +87,5 @@
     </div>
 
 
-<?php if($msgm!=null) {echo $msgm; $msgm=null;} ?>
 </body>
 </html>
