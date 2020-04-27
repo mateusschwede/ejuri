@@ -104,5 +104,6 @@
     </div>
 
 
+<?php if($_SESSION['msgm']!=null) {echo $_SESSION['msgm']; $_SESSION['msgm']=null;} ?>
 </body>
 </html>
