@@ -52,7 +52,7 @@
                     foreach($linhas as $l) {
                         echo "
                             <dt>".$l['nome']." (Oab ".$l['oab'].")</dt>
-                            <dd>Senha: ".$l['senha']." <a class='uk-button uk-button-link uk-button-small' id='btnRed' href='inativar.php?oab=".base64_encode($l['oab'])."'>Inativar</a></dd>                        
+                            <dd>Senha: ".$l['senha']." <a class='uk-button uk-button-link uk-button-small' id='btnRed' href='inativar.php?oab=".base64_encode($l['oab'])."'>Inativar</a></dd>
                         ";
                     }
                 ?>
@@ -65,7 +65,7 @@
                     foreach($linhas as $l) {
                         echo "
                             <dt>".$l['nome']." (Oab ".$l['oab'].")</dt>
-                            <dd>Senha: ".$l['senha']." <a class='uk-button uk-button-link uk-button-small' href='ativar.php?oab=".base64_encode($l['oab'])."'>Ativar</a></dd>                        
+                            <dd>Senha: ".$l['senha']." <a class='uk-button uk-button-link uk-button-small' href='ativar.php?oab=".base64_encode($l['oab'])."'>Ativar</a></dd>
                         ";
                     }
                 ?>
@@ -82,7 +82,7 @@
                     foreach($linhas as $l) {
                         echo "
                             <dt>".$l['nome']." (Cod ".$l['cod'].")</dt>
-                            <dd>Comarca: ".$l['comarca']." Senha: ".$l['senha']." <a class='uk-button uk-button-link uk-button-small' id='btnRed' href='inativar.php?cod=".base64_encode($l['cod'])."'>Inativar</a></dd>                        
+                            <dd>Comarca: ".$l['comarca']." Senha: ".$l['senha']." <a class='uk-button uk-button-link uk-button-small' id='btnRed' href='inativar.php?cod=".base64_encode($l['cod'])."'>Inativar</a></dd>
                         ";
                     }
                 ?>
@@ -95,7 +95,7 @@
                     foreach($linhas as $l) {
                         echo "
                             <dt>".$l['nome']." (Cod ".$l['cod'].")</dt>
-                            <dd>Comarca: ".$l['comarca']." Senha: ".$l['senha']." <a class='uk-button uk-button-link uk-button-small' href='ativar.php?cod=".base64_encode($l['cod'])."'>Ativar</a></dd>                        
+                            <dd>Comarca: ".$l['comarca']." Senha: ".$l['senha']." <a class='uk-button uk-button-link uk-button-small' href='ativar.php?cod=".base64_encode($l['cod'])."'>Ativar</a></dd>
                         ";
                     }
                 ?>

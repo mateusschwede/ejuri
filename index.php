@@ -8,12 +8,16 @@
             $_SESSION['senha'] = "admin";
             $_SESSION['msgm'] = null;
             header("location: admIndex.php");
-        } elseif(!empty($_POST['oab']) and $_POST['senhaAdv']) {
-            session_start();
-            $_SESSION['nome'] = $_POST['oab'];
-            $_SESSION['senha'] = $_POST['senhaAdv'];
-            $_SESSION['msgm'] = null;
-            header("location: advIndex.php");
+        } elseif((!empty($_POST['oab'])) and ($_POST['senhaAdv'])) {
+            $r = $db->prepare("SELECT oab,senha FROM advogado WHERE oab=? AND senha=?");
+            $r->execute(array($_POST['oab'],$_POST['senhaAdv']));
+            if($r->rowCount()>0) {
+                session_start();
+                $_SESSION['nome'] = $_POST['oab'];
+                $_SESSION['senha'] = $_POST['senhaAdv'];
+                $_SESSION['msgm'] = null;
+                header("location: advIndex.php");
+            }
         }
     }
 ?>

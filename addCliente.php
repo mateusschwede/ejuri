@@ -2,6 +2,19 @@
     require_once 'conect.php';
     session_start();
     if ((empty($_SESSION['nome'])) or (empty($_SESSION['senha']))) {header("location: index.php");}
+
+    $msgm = null;
+    if((!empty($_POST['cpf'])) and (!empty($_POST['nome'])) and (!empty($_POST['nascimento'])) and (!empty($_POST['sexo'])) and (!empty($_POST['estadoCivil'])) and (!empty($_POST['endereco']))) {
+        $r = $db->prepare("SELECT cpf FROM cliente WHERE cpf=?");
+        $r->execute(array($_POST['cpf']));
+        if($r->rowCount()>0) {$msgm = "<script>UIkit.notification({message: '<span uk-icon=\'icon: close\'></span> Cliente Cpf ".$_POST['cpf']." já existente', status: 'danger'})</script>";}
+        else {
+            $r = $db->prepare("INSERT INTO cliente(cpf,nome,nascimento,sexo,estadoCivil,endereco) VALUES (?,?,?,?,?,?)");
+            $r->execute(array($_POST['cpf'],$_POST['nome'],$_POST['nascimento'],$_POST['sexo'],$_POST['estadoCivil'],$_POST['endereco']));
+            $_SESSION['msgm'] = "<script>UIkit.notification({message: '<span uk-icon=\'icon: check\'></span> Cliente ".$_POST['cpf']." adicionado', status: 'success'})</script>";
+            header("location: advIndex.php");
+        }
+    }
 ?>
 
 <!doctype html>
@@ -43,102 +56,47 @@
 
     <div class="uk-child-width-expand@s" uk-grid>
         <div>
-            <h1>Processos</h1>
-            <button class="uk-button uk-button-primary" onclick="window.location.href='addProcesso.php'">Adicionar</button>
-            <h3 class="uk-heading-line"><span>Pendentes</span></h3>
-            <dl class="uk-description-list uk-description-list-divider">
-                <?php
-                    $r = $db->prepare("SELECT * FROM processo WHERE situacao='andamento' AND oabAdvogado=? ORDER BY id");
-                    $r->execute(array($_SESSION['nome']));
-                    $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
-                    foreach($linhas as $l) {
-                        echo "
-                            <dt>Id ".$l['id']."- ".$l['assunto']."</dt>
-                            <dd>Ação: ".$l['tipoAcao']." <a class='uk-button uk-button-link uk-button-small' href='processo.php?id=".base64_encode($l['id'])."'>Acessar</a></dd>                        
-                        ";
-                    }
-                ?>
-            </dl>
-            <h3 class="uk-heading-line"><span>Deferidos</span></h3>
-            <dl class="uk-description-list uk-description-list-divider">
-                <?php
-                    $r = $db->prepare("SELECT * FROM processo WHERE situacao='deferido' AND oabAdvogado=? ORDER BY id");
-                    $r->execute(array($_SESSION['nome']));
-                    $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
-                    foreach($linhas as $l) {
-                        echo "
-                            <dt>Id ".$l['id']."- ".$l['assunto']."</dt>
-                            <dd>Ação: ".$l['tipoAcao']." <a class='uk-button uk-button-link uk-button-small' href='processo.php?id=".base64_encode($l['id'])."'>Acessar</a></dd>
-                        ";
-                    }
-                ?>
-            </dl>
-            <h3 class="uk-heading-line"><span>Indeferidos</span></h3>
-            <dl class="uk-description-list uk-description-list-divider">
-                <?php
-                    $r = $db->prepare("SELECT * FROM processo WHERE situacao='indeferido' AND oabAdvogado=? ORDER BY id");
-                    $r->execute(array($_SESSION['nome']));
-                    $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
-                    foreach($linhas as $l) {
-                        echo "
-                            <dt>Id ".$l['id']."- ".$l['assunto']."</dt>
-                            <dd>Ação: ".$l['tipoAcao']." <a class='uk-button uk-button-link uk-button-small' href='processo.php?id=".base64_encode($l['id'])."'>Acessar</a></dd>
-                        ";
-                    }
-                ?>
-            </dl>
-            <h3 class="uk-heading-line"><span>Cancelados</span></h3>
-            <dl class="uk-description-list uk-description-list-divider">
-                <?php
-                    $r = $db->prepare("SELECT * FROM processo WHERE situacao='cancelado' AND oabAdvogado=? ORDER BY id");
-                    $r->execute(array($_SESSION['nome']));
-                    $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
-                    foreach($linhas as $l) {
-                        echo "
-                            <dt>Id ".$l['id']."- ".$l['assunto']."</dt>
-                            <dd>Ação: ".$l['tipoAcao']." <a class='uk-button uk-button-link uk-button-small' href='processo.php?id=".base64_encode($l['id'])."'>Acessar</a></dd>
-                        ";
-                    }
-                ?>
-            </dl>
-        </div>
-
-        <div>
-            <h1>Clientes</h1>
-            <button class="uk-button uk-button-primary" onclick="window.location.href='addCliente.php'">Adicionar</button>
-            <dl class="uk-description-list uk-description-list-divider">
-                <?php
-                    $r = $db->query("SELECT * FROM cliente WHERE ativo=1 ORDER BY nome");
-                    $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
-                    foreach($linhas as $l) {
-                        echo "
-                            <dt>".$l['nome']." (Cpf ".$l['cpf'].")</dt>
-                            <dd>Nascimento: ".$l['nascimento']." Sexo: ".$l['sexo']." Estado Civil: ".$l['estadoCivil']."</dd>
-                            <dd>Endereço: ".$l['endereco']."</dd>
-                            <dd><a class='uk-button uk-button-link uk-button-small' href='edCliente.php?cpf=".base64_encode($l['cpf'])."'>Editar</a> <a class='uk-button uk-button-link uk-button-small' id='btnRed' href='inativar.php?cpf=".base64_encode($l['cpf'])."'>Inativar</a></dd>
-                        ";
-                    }
-                ?>
-            </dl>
-            <h3 class="uk-heading-line"><span>Inativos</span></h3>
-            <dl class="uk-description-list uk-description-list-divider">
-                <?php
-                    $r = $db->query("SELECT * FROM cliente WHERE ativo=0 ORDER BY nome");
-                    $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
-                    foreach($linhas as $l) {
-                        echo "
-                            <dt>".$l['nome']." (Cpf ".$l['cpf'].")</dt>
-                            <dd>Nascimento: ".$l['nascimento']." Sexo: ".$l['sexo']." Estado Civil: ".$l['estadoCivil']."</dd>
-                            <dd>Endereço: ".$l['endereco']." <a class='uk-button uk-button-link uk-button-small' href='ativar.php?cpf=".base64_encode($l['cpf'])."'>Ativar</a></dd>
-                        ";
-                    }
-                ?>
-            </dl>
+            <h2>Novo cliente</h2>
+            <form action="addCliente.php" method="post">
+                <fieldset class="uk-fieldset">
+                    <div class="uk-margin">
+                        <input class="uk-input uk-form-width-medium" type="text" pattern="\d{3}\.\d{3}\.\d{3}-\d{2}" required name="cpf" placeholder="Cpf (xxx.xxx.xxx-xx)">
+                    </div>
+                    <div class="uk-margin">
+                        <input class="uk-input uk-form-width-medium" type="text" required name="nome" maxlength="70" placeholder="Nome" style="text-transform: lowercase;">
+                    </div>
+                    <div class="uk-margin">
+                        <label class="uk-form-label" for="formNascimento">Nascimento</label><br>
+                        <input class="uk-input uk-form-width-small" type="date" id="formNascimento" max="<?=date('Y-m-d')?>" required name="nascimento" placeholder="Nascimento">
+                    </div>
+                    <div class="uk-margin">
+                        <label class="uk-form-label" for="selectSexo">Sexo</label><br>
+                        <select class="uk-select uk-form-width-small" required id="selectSexo" name="sexo">
+                            <option value="f">Feminino</option>
+                            <option value="m">Masculino</option>
+                        </select>
+                    </div>
+                    <div class="uk-margin">
+                        <label class="uk-form-label" for="selectEc">Estado civil</label><br>
+                        <select class="uk-select uk-form-width-small" required id="selectEc" name="estadoCivil">
+                            <option value="c">Casado</option>
+                            <option value="d">Divorciado</option>
+                            <option value="e">Separado</option>
+                            <option value="s">Solteiro</option>
+                            <option value="v">Viúvo</option>
+                        </select>
+                    </div>
+                    <div class="uk-margin">
+                        <input class="uk-input uk-form-width-large" type="text" required name="endereco" maxlength="150" placeholder="Endereço" style="text-transform: lowercase;">
+                    </div>
+                    <button class="uk-button uk-button-danger" type="button" onclick="window.location.href='advIndex.php'">Voltar</button>
+                    <button class="uk-button uk-button-default" type="submit">Adicionar</button>
+                </fieldset>
+            </form>
         </div>
     </div>
 
 
-<a href="#" uk-totop uk-scroll></a>
-<?php if($_SESSION['msgm']!=null) {echo $_SESSION['msgm']; $_SESSION['msgm']=null;} ?>
+<?php if($msgm!=null) {echo $msgm; $msgm=null;} ?>
 </body>
 </html>

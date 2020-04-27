@@ -19,12 +19,12 @@ Sistema de julgamento de processos judiciais
 ### Advogado
 - edAdvogado
 - Cliente
-    - listarClientes
+    - listarClientes ✔
     - addCliente
     - edCliente
     - ativar/inativarCliente
 - Processo
-    - listarProcessos (deferidos,indeferidos,cancelados)
+    - listarProcessos (deferidos,indeferidos,cancelados) ✔
     - addProcesso
     - edProcesso
     - cancelarProcesso
