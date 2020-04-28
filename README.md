@@ -21,13 +21,13 @@ Sistema de julgamento de processos judiciais
 - Cliente
     - listarClientes ✔
     - addCliente ✔
-    - edCliente
+    - edCliente ✔
     - ativar/inativarCliente ✔
 - Processo
     - listarProcessos (andamento,deferidos,indeferidos,cancelados) ✔
     - addProcesso ✔
     - verProcesso ✔
-    - edProcesso
+    - edProcesso ✔
     - cancelarProcesso ✔
     - imprimirProcesso ✔
 

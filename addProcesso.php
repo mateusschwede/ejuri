@@ -37,7 +37,7 @@
 
     <div class="uk-child-width-expand@s" uk-grid>
         <div>
-            <h2>Novo cliente</h2>
+            <h2>Novo processo</h2>
             <form action="addProcesso.php" method="post">
                 <fieldset class="uk-fieldset">
                     <div class="uk-margin">

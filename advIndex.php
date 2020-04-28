@@ -53,7 +53,8 @@
                     foreach($linhas as $l) {
                         echo "
                             <dt id='btnOrange'>".$l['id']." ".$l['assunto']."</dt>
-                            <dd>Ação: ".$l['tipoAcao']." <a class='uk-button uk-button-link uk-button-small' href='processo.php?id=".base64_encode($l['id'])."'>Acessar</a></dd>                        
+                            <dd>Ação: ".$l['tipoAcao']."</dd>
+                            <dd><a class='uk-button uk-button-link uk-button-small' id='btnOrange' href='edProcesso.php?id=".base64_encode($l['id'])."'>Editar</a> <a class='uk-button uk-button-link uk-button-small' href='processo.php?id=".base64_encode($l['id'])."'>Acessar</a></dd>
                         ";
                     }
                 ?>
