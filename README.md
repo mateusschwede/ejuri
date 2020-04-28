@@ -17,7 +17,7 @@ Sistema de julgamento de processos judiciais
     - ativar/inativarJuiz ✔
 
 ### Advogado
-- edAdvogado
+- edAdvogado ✔
 - Cliente
     - listarClientes ✔
     - addCliente ✔
