@@ -2,6 +2,18 @@
     require_once 'conect.php';
     session_start();
     if ((empty($_SESSION['nome'])) or (empty($_SESSION['senha']))) {header("location: index.php");}
+
+    $r = $db->prepare("SELECT nome,senha FROM advogado WHERE oab=?");
+    $r->execute(array($_SESSION['nome']));
+    $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
+    foreach($linhas as $l) {$nome = $l['nome']; $senha = $l['senha'];}
+
+    if((!empty($_POST['nome'])) and (!empty($_POST['senha']))) {
+        $r = $db->prepare("UPDATE advogado SET nome=?,senha=? WHERE oab=?");
+        $r->execute(array($_POST['nome'],$_POST['senha'],$_SESSION['nome']));
+        $_SESSION['msgm'] = "<script>UIkit.notification({message: '<span uk-icon=\'icon: check\'></span> Advogado ".$_POST['nome']." atualizado', status: 'success'})</script>";
+        header("location: advIndex.php");
+    }
 ?>
 
 <!doctype html>
@@ -30,114 +42,22 @@
 
     <div class="uk-child-width-expand@s" uk-grid>
         <div>
-            <?php
-                $r = $db->prepare("SELECT nome FROM advogado WHERE oab=?");
-                $r->execute(array($_SESSION['nome']));
-                $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
-                foreach($linhas as $l) {$nome = $l['nome'];}
-                echo "<h3 class='uk-heading-bullet'>".$l['nome'].", oab ".$_SESSION['nome']." <a class='uk-button uk-button-link uk-button-small' href='edAdvogado.php'>Editar</a></h3>";
-            ?>
-        </div>
-    </div>
-
-    <div class="uk-child-width-expand@s" uk-grid>
-        <div>
-            <h1>Processos</h1>
-            <button class="uk-button uk-button-primary" onclick="window.location.href='addProcesso.php'">Adicionar</button>
-            <h3 class="uk-heading-line"><span>Andamento</span></h3>
-            <dl class="uk-description-list uk-description-list-divider">
-                <?php
-                    $r = $db->prepare("SELECT * FROM processo WHERE situacao='andamento' AND oabAdvogado=? ORDER BY id");
-                    $r->execute(array($_SESSION['nome']));
-                    $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
-                    foreach($linhas as $l) {
-                        echo "
-                            <dt id='btnOrange'>".$l['id']." ".$l['assunto']."</dt>
-                            <dd>Ação: ".$l['tipoAcao']." <a class='uk-button uk-button-link uk-button-small' href='processo.php?id=".base64_encode($l['id'])."'>Acessar</a></dd>                        
-                        ";
-                    }
-                ?>
-            </dl>
-            <h3 class="uk-heading-line"><span>Deferidos</span></h3>
-            <dl class="uk-description-list uk-description-list-divider">
-                <?php
-                    $r = $db->prepare("SELECT * FROM processo WHERE situacao='deferido' AND oabAdvogado=? ORDER BY id");
-                    $r->execute(array($_SESSION['nome']));
-                    $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
-                    foreach($linhas as $l) {
-                        echo "
-                            <dt id='btnGreen'>".$l['id']." ".$l['assunto']."</dt>
-                            <dd>Ação: ".$l['tipoAcao']." <a class='uk-button uk-button-link uk-button-small' href='processoFinalizado.php?id=".base64_encode($l['id'])."'>Acessar</a></dd>
-                        ";
-                    }
-                ?>
-            </dl>
-            <h3 class="uk-heading-line"><span>Indeferidos</span></h3>
-            <dl class="uk-description-list uk-description-list-divider">
-                <?php
-                    $r = $db->prepare("SELECT * FROM processo WHERE situacao='indeferido' AND oabAdvogado=? ORDER BY id");
-                    $r->execute(array($_SESSION['nome']));
-                    $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
-                    foreach($linhas as $l) {
-                        echo "
-                            <dt id='btnRed'>".$l['id']." ".$l['assunto']."</dt>
-                            <dd>Ação: ".$l['tipoAcao']." <a class='uk-button uk-button-link uk-button-small' href='processoFinalizado.php?id=".base64_encode($l['id'])."'>Acessar</a></dd>
-                        ";
-                    }
-                ?>
-            </dl>
-            <h3 class="uk-heading-line"><span>Cancelados</span></h3>
-            <dl class="uk-description-list uk-description-list-divider">
-                <?php
-                    $r = $db->prepare("SELECT * FROM processo WHERE situacao='cancelado' AND oabAdvogado=? ORDER BY id");
-                    $r->execute(array($_SESSION['nome']));
-                    $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
-                    foreach($linhas as $l) {
-                        echo "
-                            <dt id='btnGray'>".$l['id']." ".$l['assunto']."</dt>
-                            <dd>Ação: ".$l['tipoAcao']." <a class='uk-button uk-button-link uk-button-small' href='processoFinalizado.php?id=".base64_encode($l['id'])."'>Acessar</a></dd>
-                        ";
-                    }
-                ?>
-            </dl>
-        </div>
-
-        <div>
-            <h1>Clientes</h1>
-            <button class="uk-button uk-button-primary" onclick="window.location.href='addCliente.php'">Adicionar</button>
-            <dl class="uk-description-list uk-description-list-divider">
-                <?php
-                    $r = $db->query("SELECT * FROM cliente WHERE ativo=1 ORDER BY nome");
-                    $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
-                    foreach($linhas as $l) {
-                        echo "
-                            <dt>".$l['nome']." (Cpf ".$l['cpf'].")</dt>
-                            <dd>Nascimento: ".$l['nascimento']." Sexo: ".$l['sexo']." Estado Civil: ".$l['estadoCivil']."</dd>
-                            <dd>Endereço: ".$l['endereco']."</dd>
-                            <dd><a class='uk-button uk-button-link uk-button-small' href='edCliente.php?cpf=".base64_encode($l['cpf'])."'>Editar</a> <a class='uk-button uk-button-link uk-button-small' id='btnRed' href='inativar.php?cpf=".base64_encode($l['cpf'])."'>Inativar</a></dd>
-                        ";
-                    }
-                ?>
-            </dl>
-            <h3 class="uk-heading-line"><span>Inativos</span></h3>
-            <dl class="uk-description-list uk-description-list-divider">
-                <?php
-                    $r = $db->query("SELECT * FROM cliente WHERE ativo=0 ORDER BY nome");
-                    $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
-                    foreach($linhas as $l) {
-                        echo "
-                            <dt>".$l['nome']." (Cpf ".$l['cpf'].")</dt>
-                            <dd>Nascimento: ".$l['nascimento']." Sexo: ".$l['sexo']." Estado Civil: ".$l['estadoCivil']."</dd>
-                            <dd>Endereço: ".$l['endereco']." <a class='uk-button uk-button-link uk-button-small' href='ativar.php?cpf=".base64_encode($l['cpf'])."'>Ativar</a></dd>
-                        ";
-                    }
-                ?>
-            </dl>
+            <h2>Advogado oab <?=$_SESSION['nome']?></h2>
+            <form action="edAdvogado.php" method="post">
+                <fieldset class="uk-fieldset">
+                    <div class="uk-margin">
+                        <input class="uk-input uk-form-width-medium" type="text" required name="nome" maxlength="70" placeholder="Nome" style="text-transform: lowercase;" value="<?=$nome?>">
+                    </div>
+                    <div class="uk-margin">
+                        <input class="uk-input uk-form-width-small" type="text" required name="senha" maxlength="5" placeholder="Senha" style="text-transform: lowercase;" value="<?=$senha?>">
+                    </div>
+                    <button class="uk-button uk-button-danger" type="button" onclick="window.location.href='advIndex.php'">Voltar</button>
+                    <button class="uk-button uk-button-default" type="submit">Atualizar</button>
+                </fieldset>
+            </form>
         </div>
     </div>
 
 
-<br><a class="uk-button uk-button-default" href="#" uk-totop uk-scroll>Topo </a>
-<?php if($_SESSION['msgm']!=null) {echo $_SESSION['msgm']; $_SESSION['msgm']=null;} ?>
 </body>
 </html>
