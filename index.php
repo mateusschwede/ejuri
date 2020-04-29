@@ -79,6 +79,13 @@
                     </form>
                 </div>
             </div>
+
+            <div class="uk-child-width-expand@s uk-text-center" uk-grid>
+                <div>
+                    <p class="uk-text-bolder">Cliente, acesse o app para acompanhar seu processo</p>
+                    <button class="uk-button uk-button-primary" onclick="window.location.href='appIndex.php'"><span uk-icon="phone"></span>AcompanhAí</button>
+                </div>
+            </div>
         </div>
 
     </div>
