@@ -1,6 +1,7 @@
 <?php
     require_once 'conect.php';
 
+    $msgm = null;
     if((!empty($_POST['oab'])) and (!empty($_POST['senhaAdv']))) {
         if(($_POST['oab']==1) and ($_POST['senhaAdv']==1)) {
             session_start();
@@ -8,17 +9,27 @@
             $_SESSION['senha'] = "admin";
             $_SESSION['msgm'] = null;
             header("location: admIndex.php");
-        } elseif((!empty($_POST['oab'])) and ($_POST['senhaAdv'])) {
+        } elseif((!empty($_POST['oab'])) and (!empty($_POST['senhaAdv']))) {
             $r = $db->prepare("SELECT oab,senha FROM advogado WHERE oab=? AND senha=?");
-            $r->execute(array($_POST['oab'],$_POST['senhaAdv']));
-            if($r->rowCount()>0) {
+            $r->execute(array($_POST['oab'], $_POST['senhaAdv']));
+            if ($r->rowCount() > 0) {
                 session_start();
                 $_SESSION['nome'] = $_POST['oab'];
                 $_SESSION['senha'] = $_POST['senhaAdv'];
                 $_SESSION['msgm'] = null;
                 header("location: advIndex.php");
-            }
+            } else {$msgm = "<script>UIkit.notification({message: '<span uk-icon=\'icon: close\'></span> Dado(s) incorreto(s)', status: 'danger'})</script>";}
         }
+    } elseif((!empty($_POST['cod'])) and (!empty($_POST['senhaJu']))) {
+        $r = $db->prepare("SELECT cod,senha FROM juiz WHERE cod=? AND senha=?");
+        $r->execute(array($_POST['cod'],$_POST['senhaJu']));
+        if($r->rowCount()>0) {
+            session_start();
+            $_SESSION['nome'] = $_POST['cod'];
+            $_SESSION['senha'] = $_POST['senhaJu'];
+            $_SESSION['msgm'] = null;
+            header("location: juIndex.php");
+        } else {$msgm = "<script>UIkit.notification({message: '<span uk-icon=\'icon: close\'></span> Dado(s) incorreto(s)', status: 'danger'})</script>";}
     }
 ?>
 
@@ -73,5 +84,6 @@
     </div>
 
 
+<?php if($msgm!=null) {echo $msgm; $msgm=null;} ?>
 </body>
 </html>

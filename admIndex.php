@@ -20,7 +20,7 @@
                     </div>
                     <div class="uk-navbar-right">
                         <ul class="uk-navbar-nav">
-                            <li class="uk-parent"><a href="logout.php" id="btnRed">Logout</a></li>
+                            <li class="uk-parent"><a href="logout.php" id="btnRed">Admin - Logout</a></li>
                         </ul>
                     </div>
                 </nav>
