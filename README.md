@@ -32,12 +32,12 @@ Sistema de julgamento de processos judiciais
     - imprimirProcesso ✔
 
 ### Juíz
-- edJuiz
-- Processo
-    - listarProcessos (pendentes,deferidos,indeferidos,cancelados)
-    - imprimirProcesso
-    - deferir/indeferirProcesso
+- edJuiz ✔
+- Processo ✔
+    - listarProcessos (pendentes,deferidos,indeferidos,cancelados) ✔
+    - imprimirProcesso ✔
+    - deferir/indeferirProcesso ✔
     
 ### Pendecias
-- inativarAdvogado/cliente/juiz com processo em andamento(impossibilitar)
-- select ñ * nas listagens advIndex
+- inativarAdvogado/cliente/juiz com processo em andamento(impossibilitar) ✔
+- select ñ * nas listagens advIndex ✔
