@@ -37,3 +37,7 @@ Sistema de julgamento de processos judiciais
     - listarProcessos (pendentes,deferidos,indeferidos,cancelados)
     - imprimirProcesso
     - deferir/indeferirProcesso
+    
+### Pendecias
+- inativarAdvogado/cliente/juiz com processo em andamento(impossibilitar)
+- select ñ * nas listagens advIndex

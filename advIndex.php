@@ -31,11 +31,44 @@
     <div class="uk-child-width-expand@s" uk-grid>
         <div>
             <?php
+                //Nome advogado
                 $r = $db->prepare("SELECT nome FROM advogado WHERE oab=?");
                 $r->execute(array($_SESSION['nome']));
                 $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
                 foreach($linhas as $l) {$nome = $l['nome'];}
                 echo "<h3 class='uk-heading-bullet'>".$l['nome'].", oab ".$_SESSION['nome']." <a class='uk-button uk-button-link uk-button-small' href='edAdvogado.php'>Editar</a></h3>";
+
+                //Financeiro
+                $r = $db->prepare("SELECT sum(valorHora) FROM processo WHERE situacao='deferido' AND oabAdvogado=?");
+                $r->execute(array($_SESSION['nome']));
+                $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
+                foreach($linhas as $l) {echo "<span class='uk-label uk-label-success'>Deferidos R$ ".number_format($l['sum(valorHora)'],2,".","")."</span>";}
+                $r = $db->prepare("SELECT sum(valorHora) FROM processo WHERE situacao='indeferido' AND oabAdvogado=?");
+                $r->execute(array($_SESSION['nome']));
+                $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
+                foreach($linhas as $l) {echo " <span class='uk-label uk-label-danger'>Indeferidos R$ ".number_format($l['sum(valorHora)'],2,".","")."</span>";}
+                $r = $db->prepare("SELECT sum(valorHora) FROM processo WHERE situacao='andamento' AND oabAdvogado=?");
+                $r->execute(array($_SESSION['nome']));
+                $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
+                foreach($linhas as $l) {echo " <span class='uk-label uk-label-warning'>Andamento R$ ".number_format($l['sum(valorHora)'],2,".","")."</span><br>";}
+
+                //Quantidades
+                $r = $db->prepare("SELECT count(id) FROM processo WHERE situacao='deferido' AND oabAdvogado=?");
+                $r->execute(array($_SESSION['nome']));
+                $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
+                foreach($linhas as $l) {echo "<span class='uk-label uk-label-success'>Deferidos ".$l['count(id)']."</span>";}
+                $r = $db->prepare("SELECT count(id) FROM processo WHERE situacao='indeferido' AND oabAdvogado=?");
+                $r->execute(array($_SESSION['nome']));
+                $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
+                foreach($linhas as $l) {echo " <span class='uk-label uk-label-danger'>Indeferidos ".$l['count(id)']."</span>";}
+                $r = $db->prepare("SELECT count(id) FROM processo WHERE situacao='cancelado' AND oabAdvogado=?");
+                $r->execute(array($_SESSION['nome']));
+                $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
+                foreach($linhas as $l) {echo " <span class='uk-label uk-label-danger'>Cancelados ".$l['count(id)']."</span>";}
+                $r = $db->prepare("SELECT count(id) FROM processo WHERE situacao='andamento' AND oabAdvogado=?");
+                $r->execute(array($_SESSION['nome']));
+                $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
+                foreach($linhas as $l) {echo " <span class='uk-label uk-label-warning'>Andamento ".$l['count(id)']."</span>";}
             ?>
         </div>
     </div>
@@ -47,7 +80,7 @@
             <h3 class="uk-heading-line"><span>Andamento</span></h3>
             <dl class="uk-description-list uk-description-list-divider">
                 <?php
-                    $r = $db->prepare("SELECT * FROM processo WHERE situacao='andamento' AND oabAdvogado=? ORDER BY id");
+                    $r = $db->prepare("SELECT id,assunto,tipoAcao FROM processo WHERE situacao='andamento' AND oabAdvogado=? ORDER BY id");
                     $r->execute(array($_SESSION['nome']));
                     $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
                     foreach($linhas as $l) {
@@ -62,7 +95,7 @@
             <h3 class="uk-heading-line"><span>Deferidos</span></h3>
             <dl class="uk-description-list uk-description-list-divider">
                 <?php
-                    $r = $db->prepare("SELECT * FROM processo WHERE situacao='deferido' AND oabAdvogado=? ORDER BY id");
+                    $r = $db->prepare("SELECT id,assunto,tipoAcao FROM processo WHERE situacao='deferido' AND oabAdvogado=? ORDER BY id");
                     $r->execute(array($_SESSION['nome']));
                     $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
                     foreach($linhas as $l) {
@@ -76,7 +109,7 @@
             <h3 class="uk-heading-line"><span>Indeferidos</span></h3>
             <dl class="uk-description-list uk-description-list-divider">
                 <?php
-                    $r = $db->prepare("SELECT * FROM processo WHERE situacao='indeferido' AND oabAdvogado=? ORDER BY id");
+                    $r = $db->prepare("SELECT id,assunto,tipoAcao FROM processo WHERE situacao='indeferido' AND oabAdvogado=? ORDER BY id");
                     $r->execute(array($_SESSION['nome']));
                     $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
                     foreach($linhas as $l) {
@@ -90,7 +123,7 @@
             <h3 class="uk-heading-line"><span>Cancelados</span></h3>
             <dl class="uk-description-list uk-description-list-divider">
                 <?php
-                    $r = $db->prepare("SELECT * FROM processo WHERE situacao='cancelado' AND oabAdvogado=? ORDER BY id");
+                    $r = $db->prepare("SELECT id,assunto,tipoAcao FROM processo WHERE situacao='cancelado' AND oabAdvogado=? ORDER BY id");
                     $r->execute(array($_SESSION['nome']));
                     $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
                     foreach($linhas as $l) {
