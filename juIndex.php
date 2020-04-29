@@ -46,65 +46,70 @@
             <h3 class="uk-heading-line"><span>Andamento</span></h3>
             <dl class="uk-description-list uk-description-list-divider">
                 <?php
-                $r = $db->prepare("SELECT * FROM processo WHERE situacao='andamento' AND oabAdvogado=? ORDER BY id");
-                $r->execute(array($_SESSION['nome']));
-                $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
-                foreach($linhas as $l) {
-                    echo "
-                                <dt id='btnOrange'>".$l['id']." ".$l['assunto']."</dt>
-                                <dd>Ação: ".$l['tipoAcao']."</dd>
-                                <dd><a class='uk-button uk-button-link uk-button-small' id='btnOrange' href='edProcesso.php?id=".base64_encode($l['id'])."'>Editar</a> <a class='uk-button uk-button-link uk-button-small' href='processo.php?id=".base64_encode($l['id'])."'>Acessar</a></dd>
-                            ";
-                }
+                    $r = $db->prepare("SELECT id,assunto,tipoAcao FROM processo WHERE situacao='andamento' AND codJuiz=? ORDER BY id");
+                    $r->execute(array($_SESSION['nome']));
+                    $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
+                    foreach($linhas as $l) {
+                        echo "
+                            <dt id='btnOrange'>".$l['id']." ".$l['assunto']."</dt>
+                            <dd>Ação: ".$l['tipoAcao']." <a class='uk-button uk-button-link uk-button-small' href='processoJuiz.php?id=".base64_encode($l['id'])."'>Acessar</a></dd>
+                        ";
+                    }
                 ?>
             </dl>
+            <br><a class="uk-button uk-button-default" href="#" uk-totop uk-scroll>Topo </a>
+
             <h3 class="uk-heading-line"><span>Deferidos</span></h3>
             <dl class="uk-description-list uk-description-list-divider">
                 <?php
-                $r = $db->prepare("SELECT * FROM processo WHERE situacao='deferido' AND oabAdvogado=? ORDER BY id");
-                $r->execute(array($_SESSION['nome']));
-                $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
-                foreach($linhas as $l) {
-                    echo "
-                                <dt id='btnGreen'>".$l['id']." ".$l['assunto']."</dt>
-                                <dd>Ação: ".$l['tipoAcao']." <a class='uk-button uk-button-link uk-button-small' href='processoFinalizado.php?id=".base64_encode($l['id'])."'>Acessar</a></dd>
-                            ";
-                }
+                    $r = $db->prepare("SELECT id,assunto,tipoAcao FROM processo WHERE situacao='deferido' AND codJuiz=? ORDER BY id");
+                    $r->execute(array($_SESSION['nome']));
+                    $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
+                    foreach($linhas as $l) {
+                        echo "
+                            <dt id='btnGreen'>".$l['id']." ".$l['assunto']."</dt>
+                            <dd>Ação: ".$l['tipoAcao']." <a class='uk-button uk-button-link uk-button-small' href='processoJuizFinalizado.php?id=".base64_encode($l['id'])."'>Acessar</a></dd>
+                        ";
+                    }
                 ?>
             </dl>
+            <br><a class="uk-button uk-button-default" href="#" uk-totop uk-scroll>Topo </a>
+
             <h3 class="uk-heading-line"><span>Indeferidos</span></h3>
             <dl class="uk-description-list uk-description-list-divider">
                 <?php
-                $r = $db->prepare("SELECT * FROM processo WHERE situacao='indeferido' AND oabAdvogado=? ORDER BY id");
-                $r->execute(array($_SESSION['nome']));
-                $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
-                foreach($linhas as $l) {
-                    echo "
-                                <dt id='btnRed'>".$l['id']." ".$l['assunto']."</dt>
-                                <dd>Ação: ".$l['tipoAcao']." <a class='uk-button uk-button-link uk-button-small' href='processoFinalizado.php?id=".base64_encode($l['id'])."'>Acessar</a></dd>
-                            ";
-                }
+                    $r = $db->prepare("SELECT id,assunto,tipoAcao FROM processo WHERE situacao='indeferido' AND codJuiz=? ORDER BY id");
+                    $r->execute(array($_SESSION['nome']));
+                    $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
+                    foreach($linhas as $l) {
+                        echo "
+                            <dt id='btnRed'>".$l['id']." ".$l['assunto']."</dt>
+                            <dd>Ação: ".$l['tipoAcao']." <a class='uk-button uk-button-link uk-button-small' href='processoJuizFinalizado.php?id=".base64_encode($l['id'])."'>Acessar</a></dd>
+                        ";
+                    }
                 ?>
             </dl>
+            <br><a class="uk-button uk-button-default" href="#" uk-totop uk-scroll>Topo </a>
+
             <h3 class="uk-heading-line"><span>Cancelados</span></h3>
             <dl class="uk-description-list uk-description-list-divider">
                 <?php
-                $r = $db->prepare("SELECT * FROM processo WHERE situacao='cancelado' AND oabAdvogado=? ORDER BY id");
-                $r->execute(array($_SESSION['nome']));
-                $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
-                foreach($linhas as $l) {
-                    echo "
-                                <dt id='btnGray'>".$l['id']." ".$l['assunto']."</dt>
-                                <dd>Ação: ".$l['tipoAcao']." <a class='uk-button uk-button-link uk-button-small' href='processoFinalizado.php?id=".base64_encode($l['id'])."'>Acessar</a></dd>
-                            ";
-                }
+                    $r = $db->prepare("SELECT id,assunto,tipoAcao FROM processo WHERE situacao='cancelado' AND codJuiz=? ORDER BY id");
+                    $r->execute(array($_SESSION['nome']));
+                    $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
+                    foreach($linhas as $l) {
+                        echo "
+                            <dt id='btnRed'>".$l['id']." ".$l['assunto']."</dt>
+                            <dd>Ação: ".$l['tipoAcao']." <a class='uk-button uk-button-link uk-button-small' href='processoJuizFinalizado.php?id=".base64_encode($l['id'])."'>Acessar</a></dd>
+                        ";
+                    }
                 ?>
             </dl>
+            <br><a class="uk-button uk-button-default" href="#" uk-totop uk-scroll>Topo </a>
         </div>
     </div>
 
 
-<br><a class="uk-button uk-button-default" href="#" uk-totop uk-scroll>Topo </a>
 <?php if($_SESSION['msgm']!=null) {echo $_SESSION['msgm']; $_SESSION['msgm']=null;} ?>
 </body>
 </html>
