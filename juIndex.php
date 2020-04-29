@@ -31,11 +31,30 @@
     <div class="uk-child-width-expand@s" uk-grid>
         <div>
             <?php
+                //Nome
                 $r = $db->prepare("SELECT nome FROM juiz WHERE cod=?");
                 $r->execute(array($_SESSION['nome']));
                 $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
                 foreach($linhas as $l) {$nome = $l['nome'];}
                 echo "<h3 class='uk-heading-bullet'>".$l['nome'].", cod ".$_SESSION['nome']." <a class='uk-button uk-button-link uk-button-small' href='edJuiz.php'>Editar</a></h3>";
+
+                //Quantidades
+                $r = $db->prepare("SELECT count(id) FROM processo WHERE situacao='deferido' AND codJuiz=?");
+                $r->execute(array($_SESSION['nome']));
+                $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
+                foreach($linhas as $l) {echo "<span class='uk-label uk-label-success'>Deferidos ".$l['count(id)']."</span>";}
+                $r = $db->prepare("SELECT count(id) FROM processo WHERE situacao='indeferido' AND codJuiz=?");
+                $r->execute(array($_SESSION['nome']));
+                $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
+                foreach($linhas as $l) {echo " <span class='uk-label uk-label-danger'>Indeferidos ".$l['count(id)']."</span>";}
+                $r = $db->prepare("SELECT count(id) FROM processo WHERE situacao='cancelado' AND codJuiz=?");
+                $r->execute(array($_SESSION['nome']));
+                $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
+                foreach($linhas as $l) {echo " <span class='uk-label uk-label-danger'>Cancelados ".$l['count(id)']."</span>";}
+                $r = $db->prepare("SELECT count(id) FROM processo WHERE situacao='andamento' AND codJuiz=?");
+                $r->execute(array($_SESSION['nome']));
+                $linhas = $r->fetchAll(PDO::FETCH_ASSOC);
+                foreach($linhas as $l) {echo " <span class='uk-label uk-label-warning'>Andamento ".$l['count(id)']."</span>";}
             ?>
         </div>
     </div>
