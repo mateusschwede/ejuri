@@ -44,7 +44,7 @@
                         <input class="uk-input uk-form-width-large" type="text" required name="assunto" maxlength="100" placeholder="Assunto" style="text-transform: lowercase;">
                     </div>
                     <div class="uk-margin">
-                        <textarea class="uk-textarea uk-form-width-large" rows="5" required name="descricao" placeholder="Descrição" style="text-transform: lowercase; resize: none;"></textarea>
+                        <textarea class="uk-textarea uk-form-width-large" rows="5" required name="descricao" maxlength="500" placeholder="Descrição" style="text-transform: lowercase; resize: none;"></textarea>
                     </div>
                     <div class="uk-margin">
                         <label class="uk-form-label" for="selectAcao">Ação</label><br>
