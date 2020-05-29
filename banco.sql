@@ -20,7 +20,8 @@ CREATE TABLE cliente (
     nascimento DATE NOT NULL,
     sexo CHAR NOT NULL,
     estadoCivil CHAR NOT NULL,
-    endereco VARCHAR(150) NOT NULL
+    endereco VARCHAR(150) NOT NULL,
+    ativo BOOLEAN NOT NULL DEFAULT 1
 ) CHARSET=utf8;
 
 CREATE TABLE processo (
@@ -29,6 +30,7 @@ CREATE TABLE processo (
     descricao VARCHAR(500) NOT NULL,
     tipoAcao VARCHAR(20) NOT NULL,
     valorHora FLOAT NOT NULL,
+    situacao VARCHAR(20) NOT NULL DEFAULT "pendente",
     cpfCliente VARCHAR(15) NOT NULL,
     oabAdvogado BIGINT(10) NOT NULL,
     codJuiz BIGINT(10) NOT NULL
